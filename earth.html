@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to WebGL</title>
+<link rel="stylesheet" href="./css/webglbook.css" />
+<script src="./lib/jquery-1.6.4.js"></script>
+<script src="./lib/Three.js"></script>
+<script src="./lib/RequestAnimationFrame.js"></script>
+<script src="./lib/jquery.mousewheel.js"></script>
+<script src="./lib/sim.js"></script>
+<script>
+    var EarthApp = function() {
+        Sim.App.call(this);
+    }
+    EarthApp.prototype = new Sim.App();
+    EarthApp.prototype.init = function (param) {
+        Sim.App.prototype.init.call(this, param);
+        var earth = new Earth();
+        earth.init();
+        this.addObject(earth);
+    }
+    var Earth = function() {
+        Sim.Object.call(this);
+    }
+    Earth.prototype = new Sim.Object();
+    Earth.prototype.init = function () {
+        var earthmap = "./images/earth_surface_2048.jpg";
+        var geometry = new THREE.SphereGeometry(1, 32, 32);
+        var texture = THREE.ImageUtils.loadTexture(earthmap);
+        var material = new THREE.MeshBasicMaterial( {map: texture});
+        var mesh = new THREE.Mesh( geometry, material );
+
+        mesh.rotation.z = Earth.TILT;
+        this.setObject3D(mesh);
+    }
+    Earth.prototype.update = function() {
+        this.object3D.rotation.y += Earth.ROTATION_Y;
+    }
+    Earth.ROTATION_Y = 0.0025;
+    Earth.TILT = 0.41;
+
+    $(document).ready(
+		function() {
+			var container = document.getElementById("container");
+			var app = new EarthApp();
+			app.init({ container: container });
+			app.run();
+		}
+	);
+</script>
+</head>
+<body>
+	<center><h1>Welcome to WebGL!</h1></center>
+    <div id="container" style="width:95%; height:80%; position:absolute;"></div>
+	<div id="prompt" style="width:95%; height:6%; bottom:0; text-align:center; position:absolute;">Click to animate the cube</div>
+</body>
+</html>

@@ -7,6 +7,7 @@
             var container = document.getElementById("container");
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize(container.offsetWidth, container.offsetHeight);
+            renderer.setClearColor(0x663399);
             container.appendChild(renderer.domElement);
 
             var scene = new THREE.Scene();
@@ -17,7 +18,7 @@
 
             var geometry = new THREE.PlaneGeometry(1, 1);
             var mesh = new THREE.Mesh( geometry,
-                new THREE.MeshBasicMaterial() );
+                new THREE.MeshBasicMaterial( {color: 0x330066} ) );
             scene.add( mesh );
 
             renderer.render( scene, camera );
