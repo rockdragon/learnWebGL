@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to WebGL</title>
+<link rel="stylesheet" href="./css/webglbook.css" />
+<script src="./lib/jquery-1.6.4.js"></script>
+<script src="./lib/three.js"></script>
+<script src="./lib/RequestAnimationFrame.js"></script>
+<script src="./lib/jquery.mousewheel.js"></script>
+<script src="./lib/sim.js"></script>
+<script>
+    var TankApp = function() {
+        Sim.App.call(this);
+    };
+    TankApp.prototype = new Sim.App();
+    TankApp.prototype.init = function(param) {
+        Sim.App.prototype.init.call(this, param);
+
+        var tank = new Tank();
+        tank.init();
+        this.addObject(tank);
+
+        var sun = new Sun();
+        sun.init();
+        this.addObject(sun);
+    };
+
+    var Sun = function() {
+        Sim.Object.call(this);
+    };
+    Sun.prototype = new Sim.Object();
+    Sun.prototype.init = function() {
+        var light = new THREE.PointLight( 0xffffff, 2, 100 );
+        light.position.set( -10, 0, 20 );
+
+        this.setObject3D(light);
+    };
+
+    var Tank = function() {
+        Sim.Object.call(this);
+    };
+    Tank.prototype = new Sim.Object();
+    Tank.prototype.init = function() {
+        var map = THREE.ImageUtils.loadTexture(
+                "./images/tank.jpg");
+        var geometry = new THREE.CubeGeometry(1, 1, 1);
+        var material = new THREE.MeshPhongMaterial({ map: map});
+        var mesh = new THREE.Mesh(geometry, material);
+
+        this.setObject3D(mesh);
+    };
+    Tank.prototype.update = function() {
+        this.object3D.rotation.y += Tank.TILT;
+        this.object3D.rotation.z += Tank.TILT;
+    };
+    Tank.TILT = 0.01;
+
+    $(document).ready(
+		function() {
+			var container = document.getElementById("container");
+			var app = new TankApp();
+			app.init({ container: container });
+			app.run();
+		}
+	);
+</script>
+</head>
+<body>
+	<center><h1>Welcome to WebGL!</h1></center>
+    <div id="container" style="width:95%; height:80%; position:absolute;"></div>
+	<div id="prompt" style="width:95%; height:6%; bottom:0; text-align:center; position:absolute;">Click to animate the cube</div>
+</body>
+</html>
