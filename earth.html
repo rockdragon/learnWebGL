@@ -4,7 +4,7 @@
 <title>Welcome to WebGL</title>
 <link rel="stylesheet" href="./css/webglbook.css" />
 <script src="./lib/jquery-1.6.4.js"></script>
-<script src="./lib/Three.js"></script>
+<script src="./lib/three.js"></script>
 <script src="./lib/RequestAnimationFrame.js"></script>
 <script src="./lib/jquery.mousewheel.js"></script>
 <script src="./lib/sim.js"></script>
@@ -18,7 +18,21 @@
         var earth = new Earth();
         earth.init();
         this.addObject(earth);
+
+        var sun = new Sun();
+        sun.init();
+        this.addObject(sun);
     }
+    var Sun = function() {
+        Sim.Object.call(this);
+    }
+    Sun.prototype = new Sim.Object();
+    Sun.prototype.init = function() {
+        var light = new THREE.PointLight( 0xffffff, 2, 100 );
+        light.position.set(-10, 0, 20);
+        this.setObject3D(light);
+    }
+
     var Earth = function() {
         Sim.Object.call(this);
     }
@@ -27,7 +41,7 @@
         var earthmap = "./images/earth_surface_2048.jpg";
         var geometry = new THREE.SphereGeometry(1, 32, 32);
         var texture = THREE.ImageUtils.loadTexture(earthmap);
-        var material = new THREE.MeshBasicMaterial( {map: texture});
+        var material = new THREE.MeshPhongMaterial( {map: texture});
         var mesh = new THREE.Mesh( geometry, material );
 
         mesh.rotation.z = Earth.TILT;
